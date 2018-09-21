@@ -1,0 +1,12 @@
+Things I have forgotten before --
+
+Packages:
+help(package = name) - pulls up help document that lists all functions in a package 
+browseVignettes(package = name) - pull up vignettes
+
+attributes(obj) - display attributes for an object
+
+cbind() - column bind.
+rbind() - row bind.
+
+seq(along = x)
