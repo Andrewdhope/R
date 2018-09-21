@@ -4,4 +4,4 @@
 
 [ggplot2](http://ggplot2.org)
 
-[JSON] (http://www.json.org/)
+[JSON](http://www.json.org/)
