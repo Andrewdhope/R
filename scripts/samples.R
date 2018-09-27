@@ -14,65 +14,50 @@
 #
 # ideas - subsetting, transforms, order, APIs
 # reading from a connection
+# ggplot2 for sure
 #
 # help(package = name)
 # chaining
 # cut()
 #
+# /// DEV COMP /// #
+
+
+
 # NAME: useColClasses
 # DESC: How to easily set up the colClasses parameter when using read.table
 # KEYS: 
 useColClasses <- function(file) {
-  initial <- read.table(file, nrows = 100)
+  initial <- read.table(file, nrows = 10)
   classes <- sapply(initial, class)
   full <- read.table(file, colClasses = classes)
 }
 
 
-# /// STARTING TO JUST GATHER FUNCTIONS FROM VARIOUS COURSE WEEKS /// #
 
-# NAME: best
-# DESC: read file, filter by variable parameter, sort by second parameter, make df of best of sorted variable
-# KEYS: 
-# make generic: yes
-best <- function(state, outcome){
-    outcomeData <- read.csv("outcome-of-care-measures.csv", colClass = "character") # set all of the columns as character vectors
-    switch(outcome, 
-           "heart attack" = outcomeCol <- 11,
-           "heart failure" = outcomeCol <- 17,
-           "pneumonia" = outcomeCol <- 23, stop("invalid outcome"))
-    stateSelector <- outcomeData$State == state # take the state column
-    outcomeState <- outcomeData[stateSelector, ]
-    outcomeState[, outcomeCol] <- as.numeric(outcomeState[, outcomeCol]) # convert to numeric
-    complete <- complete.cases(outcomeState[, outcomeCol]) 
-    outcomeStateComplete <- outcomeState[complete, ]
-    sortedOutcome <- sort(outcomeStateComplete[, outcomeCol]) # sort by the outcome column
-    minHospitals <- outcomeStateComplete[, outcomeCol] == sortedOutcome[1] # take the minimum value of the sorted column
-    hospitalNames <- outcomeStateComplete[minHospitals, 2] # make a data frame of the best row(s)
-    hospitalNames
+# NAME: bracketSubsetting
+# DESC: example of subsetting a dataframe with single brackets
+#       in this example the user provides parameters to first filter the dataframe by a value of one of the colunms
+#       the function will then sort the filtered dataframe by another user-defined column and return the rows containing the minimum values
+#       the user can also define a subset of columns to return
+# PARAMS: all required, can be numbers or column names
+# KEYS: subset, sort, filter
+
+bracketSubsetting <- function(df,  filterVal, filterCol, sortedCol, returnCols) {
+    filteredSelector <- df[,filterCol] == filterVal  # get rows containing the filter column's  filter value
+    filteredOutcome <- df[filteredSelector, ]  # reduce the dataframe using the filteredSelector
+    complete <- complete.cases(filteredOutcome[, sortedCol])  # check for complete cases in the sorting column
+    filteredComplete <- filteredOutcome[complete,]  # reduce to complete cases only
+    sortedOutcome <- sort(filteredComplete[,sortedCol])  # sort on the sortedCol parameter
+    minValues <- filteredComplete[, sortedCol] == sortedOutcome[1]  # only keep rows containing the minimum value
+    minValuesDataFrame <- filteredComplete[minValues, returnCols]  # return the rows containing the minimum value and the columns specified
+    minValuesDataFrame
 }
 
 
-# course_week: 2.4
-# description: read file, filter by variable parameter, order by second variable, return name of row in third-variable place
-# make generic: yes
-rankhospital <- function(state, outcome, num) {
-    outcomeData <- read.csv("outcome-of-care-measures.csv", colClass = "character")
-    switch(outcome, 
-           "heart attack" = outcomeCol <- 11,
-           "heart failure" = outcomeCol <- 17,
-           "pneumonia" = outcomeCol <- 23, stop("invalid outcome"))
-    stateSelector <- outcomeData$State == state  # logical vector by state
-    outcomeState <- outcomeData[stateSelector, ]
-    outcomeState[, outcomeCol] <- as.numeric(outcomeState[, outcomeCol]) # coerce outcome column to numeric
-    complete <- complete.cases(outcomeState[, outcomeCol])
-    outcomeStateComplete <- outcomeState[complete, ]
-    orderedOutcome <- outcomeStateComplete[order(outcomeStateComplete[,outcomeCol], outcomeStateComplete[, 2]),]
-    if (num == "best") {num <- 1}
-    if (num == "worst")  {num <- nrow(orderedOutcome)}
-    hospitalName <- orderedOutcome[num, 2]
-    hospitalName
-}
+# /// IN DEV /// #
+
+
 
 # course_week: 2.4
 # description: read file, filter by variable parameter, split, take the second-variable place in each partition, return df of results
@@ -101,61 +86,56 @@ rankall <- function(outcome, num = "best") {
     hospitalNames
 }
 
-# course_week: 2.3
-# description: Use a function constructor to define get and set operations
-# make generic: no
-makeCacheMatrix <- function (x) {
+# NAME: makeCacheMatrix
+# DESC: example of a function constructor to define get and set operations
+# KEYS: constructor, cache, matrix
+
+# the makeCacheMatrix function creates a list object of functions.
+# the get functions can store values for their input parameters
+
+makeCacheMatrix <- function(x) {
     inv <- NULL
     set <- function(y) {
-        x <<- y
-        inv <<- NULL
+        # the <<- function assigns a value to a variable. 
+        # if the variable is not found at the current stack level, 
+        # the funciton will travel up the stack until it finds the variable.
+        x <<- y  # set the cached x value
+        inv <<- NULL # clear the cached inverse value
     }
-    get <- function () x
-    setinv <- function(inverse) inv <<-- inverse
-    getinv <- function() inv
+    get <- function() x  # simply return x, the matrix that this get function was initialized with.
+    setinv <- function(inverse) inv <<-- inverse  # set the inv with a given inverse value (without validating the input parameter...)
+    getinv <- function() inv  # return the inverse value, even if NULL.
     list(set = set, get = get, setinv = setinv, getinv = getinv)
 }
 
-cacheSolve <- function (x, ...) {
+# NAME: cacheSolve
+# DESC: example of how to utilize construted get/set functions (from makeCacheMatrix)
+# KEYS: constructor, cache, matrix
+
+cacheSolve <- function(x, ...) {
     inv <- x$getinv()
     if(!is.null(inv)) {
         message("getting cached data")
         return(inv)
     }
     data <- x$get()
-    inv <- solve(data, ...)
+    inv <- solve(data, ...) 
     x$setinv(inv)
     inv
 }
 
-# course_week: 2.2 
-# description: Loop through a set of files, combine all complete cases to a new data frame
-# make generic: yes
-pollutantmean <- function(directory, pollutant, id = 1:332) {
+# NAME: combineFiles
+# DESC: open a set of files from a directory, numbered (001, 002, ...), check for complete cases, and combine into a singel data frame.
+# KEYS: read, files, combine
+combineFiles <- function(directory, id = 1:999, column) {
     full_df = data.frame()
     for (i in id){
-        padded_id <- formatC(i, width = 3, flag = 0)
-        path <- paste(directory, "/", padded_id, ".csv", sep = "")
+        padded_id <- formatC(i, width = 3, flag = 0) # format the number to be at least three characters in length
+        path <- paste(directory, "/", padded_id, ".csv", sep = "") # this assumes the files are simply named as 3-character numbers
         df <- read.csv(path)
-        remove_na <- complete.cases(df[[pollutant]])
+        remove_na <- complete.cases(df[[column]]) # check for complete cases of a given column
         cleaned_df <- df[remove_na,]
-        full_df <- rbind(full_df, cleaned_df)
+        full_df <- rbind(full_df, cleaned_df) # bind the complete rows into a single dataframe
     }
-    mean(full_df[, pollutant])
-}
-
-# course_week: 10
-# description: given a document term matrix, plot either 
-## a) a histogram of the top n most common words, or 
-## b) an analysis showing the cumulative frequency of terms
-# make generic: maybe
-
-build.pareto <- function(dtm) {
-    library(ggplot2)
-    freq <- colSums(as.matrix(dtm))
-    ord <- order(freq, decreasing = TRUE)
-    ordered <- freq[ord]
-    running.total <- sapply(seq_along(ordered), function(x){sum(ordered[1:x])})
-    p <- qplot(seq_along(running.total), running.total/running.total[length(running.total)], xlab = "Top Grams", ylab = "Instances (%)")
-    p
+    full_df
 }
