@@ -20,10 +20,10 @@
 # chaining
 # cut()
 #
+#
+#
 # /// DEV COMP /// #
-
-
-
+#
 # NAME: useColClasses
 # DESC: How to easily set up the colClasses parameter when using read.table
 # KEYS: 
@@ -55,36 +55,6 @@ bracketSubsetting <- function(df,  filterVal, filterCol, sortedCol, returnCols) 
 }
 
 
-# /// IN DEV /// #
-
-
-
-# course_week: 2.4
-# description: read file, filter by variable parameter, split, take the second-variable place in each partition, return df of results
-# make generic: yes
-rankall <- function(outcome, num = "best") {
-    outcomeData <- read.csv("outcome-of-care-measures.csv", colClass = "character")
-    switch(outcome, 
-           "heart attack" = outcomeCol <- 11,
-           "heart failure" = outcomeCol <- 17,
-           "pneumonia" = outcomeCol <- 23, stop("invalid outcome"))
-    if (num == "worst") {worst <- TRUE}
-    else {worst <- FALSE}
-    colData <- as.numeric(outcomeData[, outcomeCol])
-    colDataComplete <- complete.cases(colData)
-    outcomeDataComplete <- outcomeData[colDataComplete, ]
-    outcomeDataComplete[, outcomeCol] <- as.numeric(outcomeDataComplete[, outcomeCol])
-    # browser()
-    states <- split(outcomeDataComplete, outcomeDataComplete$State)
-    for (i in states) {
-        orderedOutcome <- i[order(i[outcomeCol], i[2]),]
-        if (num == "best") {num <- 1}
-        if (worst)  {num <- nrow(orderedOutcome)}
-        binder <- data.frame("hospital" = orderedOutcome[num, 2], "state" = orderedOutcome[1, 7])
-        hospitalNames <- rbind(hospitalNames, binder)
-    }
-    hospitalNames
-}
 
 # NAME: makeCacheMatrix
 # DESC: example of a function constructor to define get and set operations
@@ -123,6 +93,8 @@ cacheSolve <- function(x, ...) {
     x$setinv(inv)
     inv
 }
+
+
 
 # NAME: combineFiles
 # DESC: open a set of files from a directory, numbered (001, 002, ...), check for complete cases, and combine into a singel data frame.
