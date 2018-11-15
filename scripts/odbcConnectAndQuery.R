@@ -24,10 +24,10 @@
 #
 # NAME: demonstrateRODBC
 # DESC: Prints out a demo of the core functions of the RODBC package.
-#       This demo uses a dsn connected to an Epic dev environment.
+#       This demo uses a dsn connected to a dev environment.
 # KEYS: odbc, sql, connection, query
 # TODO: Convert the demo into encapsulated functions... but the encapsulated functions are just the RODBC package...
-#       Generalize it away from Epic-specific databases. The demo can use Epic content but the vars should be passed in with a wrapper.
+#       Generalize it away from specific databases. The vars should be passed in with a wrapper.
 #       ...again, anything more general is just a call to RODBC functions. A demo is the most useful thing. Show the functions in action.
 #
 demonstrateRODBC <- function(conn = "", dsn = "2018-DEV-SQL") {
@@ -99,4 +99,5 @@ demonstrateRODBC <- function(conn = "", dsn = "2018-DEV-SQL") {
     if (closeWhenDone) {
         odbcClose(conn)
     }
+
 }
