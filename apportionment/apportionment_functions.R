@@ -24,12 +24,22 @@ getCensusDataframe <- function() {
   library('censusapi')
   url <- "https://api.census.gov/data/2010/dec/sf1"
   key <- "9d57165f0c02abba2b8838cc2deedc830e271035"
-  req_httr <- httr::GET(url, query = list(key = "9d57165f0c02abba2b8838cc2deedc830e271035", get = "P001001", "for" = "state:06"))
+  # build state:01,02,03...56
+  states_keys <- formatC(1:56, width = 2, flag = "0") # 56 states, need a reference table for state names
+  states_string <- "state:"
+  for (i in states_keys) {
+    states_string <- paste0(states_string, i)
+    if (i < length(states_keys)) {
+        states_string <- paste0(states_string, ",")    
+    }
+  }
+  req_httr <- httr::GET(url, query = list(key = "9d57165f0c02abba2b8838cc2deedc830e271035", get = "STATE,LSAD_NAME,P001001", "for" = states_string))
   req_content <- httr::content(req_httr, as = "text")
   raw_json <- jsonlite::fromJSON(req_content)
   print(raw_json)
   getreq <- getCensus("dec/sf1", vintage = 2010, key, vars = c("P001001"), region = "state:06")
   print(getreq)
+  raw_json
 }
 # /// --- proposedCount --- ///
 # p - total population
