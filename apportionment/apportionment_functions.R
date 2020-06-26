@@ -21,7 +21,7 @@
 getCensusDataframe <- function() {
   library('httr')
   library('jsonlite')
-  library('censusapi')
+  library('censusapi') # getreq <- getCensus("dec/sf1", vintage = 2010, key, vars = c("P001001"), region = "state:06")
   url <- "https://api.census.gov/data/2010/dec/sf1"
   key <- "9d57165f0c02abba2b8838cc2deedc830e271035"
   # build state:01,02,03...56
@@ -35,11 +35,14 @@ getCensusDataframe <- function() {
   }
   req_httr <- httr::GET(url, query = list(key = "9d57165f0c02abba2b8838cc2deedc830e271035", get = "STATE,LSAD_NAME,P001001", "for" = states_string))
   req_content <- httr::content(req_httr, as = "text")
-  raw_json <- jsonlite::fromJSON(req_content)
-  print(raw_json)
-  getreq <- getCensus("dec/sf1", vintage = 2010, key, vars = c("P001001"), region = "state:06")
-  print(getreq)
-  raw_json
+  df <- jsonlite::fromJSON(req_content)
+  
+  # move variable names into colnames
+  colnames(df) <- df[1,] 
+  df <- df[-1,]
+  
+  print(df)
+  df
 }
 # /// --- proposedCount --- ///
 # p - total population
