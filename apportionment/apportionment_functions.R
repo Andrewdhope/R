@@ -21,6 +21,9 @@ buildDataframe <- function(use_limit = FALSE) {
     df <- df[-1,]
     df <- df[,-4]
     
+    # remove District of Columbia
+    df <- df[!df$STATE == 11,]
+    
     # set data types
     df$P001001 <- as.numeric(df$P001001)
     
@@ -45,11 +48,14 @@ buildDataframe <- function(use_limit = FALSE) {
         df$seats[which.max(df$multiplier)] = df$seats[which.max(df$multiplier)] + 1
     }
     
+    # order by state
+    df <- df[order(df$STATE),]
+    
     df
 }
 
 recalculateMultiplier <- function(df) {
-    geometric_mean <- (1/(sqrt(df$seats+1)*df$seats))
+    geometric_mean <- (1/(sqrt((df$seats+1)*df$seats)))
     multiplier <- df$P001001 * geometric_mean
     multiplier
 }
@@ -91,9 +97,9 @@ getCensusData <- function() {
 proposedCount <- function(population, init = 30000, stepval = 100){
     seat_limit <- 0
       while (TRUE) {
-        if ((population/(10000*init))>=stepval) {
+        if ((population/(init))>=stepval) {
           seat_limit <- seat_limit+stepval
-          population <- population-(10000*init*stepval)
+          population <- population-(init*stepval)
         } else {
             seat_limit <- seat_limit + ceiling(population/(10000*init))
             break
