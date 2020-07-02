@@ -1,17 +1,30 @@
+# NEXT STEP: Build out the table with various derived columns for things like comparative influence, etc.
 #
 # API Key: 9d57165f0c02abba2b8838cc2deedc830e271035
 # API Documentation: https://www.census.gov/data/developers/geography.html <<< INACCURATE
 # API Example: 
 # http://api.census.gov/data/2010/dec/sf1?key=9d57165f0c02abba2b8838cc2deedc830e271035&get=P001001&for=state:06
-# Method of Equal Proportions: https://census.gov/population/apportionment/about/computing.html
 #
 # ---------- ---------- ----------
 #             Title
 # ---------- ---------- ----------
-# 
-# description 
 #
-buildDataframe <- function(use_limit = FALSE) {
+#
+# description
+#
+# ********************************
+#
+# /// --- buildDataframe --- ///
+# 
+# Notes:
+#   parameters:
+#       - seats_capped: set to TRUE to use the 435 seat limit, FALSE to use the uncapped apportionment formula
+#   calls:
+#       - getCensusData
+#       - uncappedApportionment
+#       - recalculateMultiplier
+#
+buildDataframe <- function(seats_capped = TRUE) {
     
     df <- getCensusData()
     df <- as.data.frame(df)
@@ -29,23 +42,23 @@ buildDataframe <- function(use_limit = FALSE) {
     
     # set seat limit
     seat_limit <- 435
-    if (use_limit) {
+    if (!seats_capped) {
         total_population <- sum(df$P001001)
-        seat_limit <- proposedCount(total_population, 30000, 100)    
+        seat_limit <- uncappedApportionment(total_population, 30000, 100)    
     }
     
     # instantiate seats
     df <- cbind(df, seats = 1)
     
     # instantiate multiplier
-    multiplier <- recalculateMultiplier(df)
-    df <- cbind(df, multiplier = multiplier)
+    priority_values <- recalculatePriorityValues(df)
+    df <- cbind(df, priority_values = priority_values)
     
     # loop to allocate seats
     while (sum(df$seats) < seat_limit) {
-        multiplier <- recalculateMultiplier(df)
-        df$multiplier = multiplier
-        df$seats[which.max(df$multiplier)] = df$seats[which.max(df$multiplier)] + 1
+        priority_values <- recalculatePriorityValues(df)
+        df$priority_values = priority_values
+        df$seats[which.max(df$priority_values)] = df$seats[which.max(df$priority_values)] + 1
     }
     
     # order by state
@@ -54,28 +67,34 @@ buildDataframe <- function(use_limit = FALSE) {
     df
 }
 
-recalculateMultiplier <- function(df) {
-    geometric_mean <- (1/(sqrt((df$seats+1)*df$seats)))
-    multiplier <- df$P001001 * geometric_mean
-    multiplier
+# /// --- recalculatePriorityValues --- ///
+# 
+# Notes:
+#   Derived from the Method of Equal Proportions: https://census.gov/population/apportionment/about/computing.html
+#   parameters:
+#       - df: dataframe from buildDataframe
+#   returns: priority_value, as described by the Method of Equal Proportions 
+#
+recalculatePriorityValues <- function(df) {
+    multiplier <- (1/(sqrt((df$seats+1)*df$seats))) # geometric mean, as described by the Method of Equal Proportions
+    priority_values <- df$P001001 * multiplier
+    priority_values
 }
 
 # /// --- getCensusData --- ///
 # 
 # Notes:
-#   Use httr and jsonlite
-# 
-# Next step:
-#   Read through getCensus and decide whether to us it or to use httr and jsonlite
+#   dependencies: httr, jsonlite
 #
 getCensusData <- function() {
   library('httr')
   library('jsonlite')
-  # getreq <- censusapi::getCensus("dec/sf1", vintage = 2010, key, vars = c("P001001"), region = "state:06")
+    
   url <- "https://api.census.gov/data/2010/dec/sf1"
   key <- "9d57165f0c02abba2b8838cc2deedc830e271035"
-  # build state:01,02,03...56
-  states_keys <- formatC(1:56, width = 2, flag = "0") # 56 states, need a reference table for state names
+  
+  # build a state string for the querystring parameter, in the format of "states:01,02,03...55,56"
+  states_keys <- formatC(1:56, width = 2, flag = "0") # 56 states, territories and D.C. will be filtered along the way.
   states_string <- "state:"
   for (i in states_keys) {
     states_string <- paste0(states_string, i)
@@ -83,18 +102,25 @@ getCensusData <- function() {
         states_string <- paste0(states_string, ",")    
     }
   }
-  req_httr <- httr::GET(url, query = list(key = "9d57165f0c02abba2b8838cc2deedc830e271035", get = "STATE,LSAD_NAME,P001001", "for" = states_string))
-  req_content <- httr::content(req_httr, as = "text")
+  
+  # GET request
+  req_get <- httr::GET(url, query = list(key = "9d57165f0c02abba2b8838cc2deedc830e271035", get = "STATE,LSAD_NAME,P001001", "for" = states_string))
+  req_content <- httr::content(req_get, as = "text")
   raw_json <- jsonlite::fromJSON(req_content)
   raw_json
 }
 
-# /// --- proposedCount --- ///
-# p - total population
-# i - initial multiplier, multiplied by 10,000 (typically 3 for a ration of 1 per 30,000) 
-# x - step value, number of representatives to increment to the next step of the function
+# /// --- uncappedApprotionment --- ///
+# 
+# Notes:
+#   _description_
+#   parameters:
+#       - population: total population as a summary of represented states with populations of districts and territories excluded
+#       - init: initial divisor, number of citizens represented by one seat, (default: 30,000)
+#       - stepval: step value, number of apportioned seats needed to increment the init value (default: 100)
+#   returns: priority_value, as described by the Method of Equal Proportions 
 #
-proposedCount <- function(population, init = 30000, stepval = 100){
+uncappedApportionment <- function(population, init = 30000, stepval = 100){
     seat_limit <- 0
       while (TRUE) {
         if ((population/(init))>=stepval) {
