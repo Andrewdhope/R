@@ -1,4 +1,6 @@
 # NEXT STEP: Relearn shiny and ggplot. Population vs. influence delta.
+#   - Shouldn't be hard to figure out shiny from the generic sample, just need to google radio buttons and stuff
+#   - Make my desired plot and table with ggplot and gganimate (reactive to radio buttons, and to re-sorting).
 #
 # Wireframe:
 #   Title.
@@ -6,6 +8,10 @@
 #   Horizontal bar plot of seats per state | sortable columns for population, #_static, %_static, #_dynamic, %_dynamic, delta_%.
 #   Radio buttons for the data in the bar plot, static vs. dynamic.
 #   Plenty of documentation and research.
+#
+# gganimate:
+#   - https://towardsdatascience.com/create-animated-bar-charts-using-r-31d09e5841da
+#   - https://www.blakeshaffer.ca/post/making-animated-charts-with-gganimate/
 #
 # API Key: 9d57165f0c02abba2b8838cc2deedc830e271035
 # API Documentation: https://www.census.gov/data/developers/geography.html <<< INACCURATE
@@ -101,10 +107,7 @@ seatsDataframe <- function(df, seats_capped = TRUE) {
         df$priority_values = priority_values
         df$seats[which.max(df$priority_values)] = df$seats[which.max(df$priority_values)] + 1
     }
-    
-    # order by state
-    df <- df[order(df$STATE),]
-    
+
     df
 }
 
