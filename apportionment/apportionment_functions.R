@@ -1,4 +1,11 @@
-# NEXT STEP: Build out the table with various derived columns for things like comparative influence, etc.
+# NEXT STEP: Relearn shiny and ggplot. Population vs. influence delta.
+#
+# Wireframe:
+#   Title.
+#   Intro.
+#   Horizontal bar plot of seats per state | sortable columns for population, #_static, %_static, #_dynamic, %_dynamic, delta_%.
+#   Radio buttons for the data in the bar plot, static vs. dynamic.
+#   Plenty of documentation and research.
 #
 # API Key: 9d57165f0c02abba2b8838cc2deedc830e271035
 # API Documentation: https://www.census.gov/data/developers/geography.html <<< INACCURATE
@@ -18,17 +25,51 @@
 # 
 # Notes:
 #   parameters:
+#   calls:
+#       - getCensusData
+#        - seatsDataframe
+#
+buildDataframe <- function() {
+    df <- getCensusData()
+    df <- as.data.frame(df)
+    
+    #efficiency gain: memory
+    df_limit <- seatsDataframe(df, TRUE)
+    df_unlimit <- seatsDataframe(df, FALSE)
+    
+    df <- cbind(df_limit, df_unlimit$seats)
+    df <- df[,-5]
+    
+    df <- cbind(df, 100*round((df[4]/sum(df[4])),4))
+    df <- cbind(df, 100*round((df[5]/sum(df[5])),4))
+    df <- cbind(df, df[7]-df[6])
+    
+    # order, rank, re-order
+    df <- df[order(df$P001001, decreasing = TRUE),]
+    df <- cbind(df, c(1:50))
+    df <- df[order(df$STATE),]
+    
+    colnames(df)[4] <- "seats_limit"
+    colnames(df)[5] <- "seats_unlim"
+    colnames(df)[6] <- "influnce_limit (%)"
+    colnames(df)[7] <- "influence_unlim (%)"
+    colnames(df)[8] <- "influence_delta (%)"
+    colnames(df)[9] <- "population_rank"
+    
+    df
+}
+# /// --- seatsDataframe --- ///
+# 
+# Notes:
+#   parameters:
 #       - seats_capped: set to TRUE to use the 435 seat limit, FALSE to use the uncapped apportionment formula
 #   calls:
 #       - getCensusData
 #       - uncappedApportionment
 #       - recalculateMultiplier
 #
-buildDataframe <- function(seats_capped = TRUE) {
-    
-    df <- getCensusData()
-    df <- as.data.frame(df)
-    
+seatsDataframe <- function(df, seats_capped = TRUE) {
+
     # move variable names into colnames
     colnames(df) <- df[1,]
     df <- df[-1,]
