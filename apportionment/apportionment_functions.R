@@ -1,11 +1,13 @@
-# NEXT STEP: Relearn shiny and ggplot. Population vs. influence delta.
+# NEXT STEP: 
 #   - Shouldn't be hard to figure out shiny from the generic sample, just need to google radio buttons and stuff
 #   - Make my desired plot and table with ggplot and gganimate (reactive to radio buttons, and to re-sorting).
+#       + Basic styles: axis labels, color
 #
 # Wireframe:
 #   Title.
 #   Intro.
 #   Horizontal bar plot of seats per state | sortable columns for population, #_static, %_static, #_dynamic, %_dynamic, delta_%.
+#   Summary statistics: total seats, max/max/mean constituents
 #   Radio buttons for the data in the bar plot, static vs. dynamic.
 #   Plenty of documentation and research.
 #
@@ -57,13 +59,39 @@ buildDataframe <- function() {
     
     colnames(df)[4] <- "seats_limit"
     colnames(df)[5] <- "seats_unlim"
-    colnames(df)[6] <- "influnce_limit (%)"
-    colnames(df)[7] <- "influence_unlim (%)"
-    colnames(df)[8] <- "influence_delta (%)"
+    colnames(df)[6] <- "influnce_limit(%)"
+    colnames(df)[7] <- "influence_unlim(%)"
+    colnames(df)[8] <- "influence_delta(%)"
     colnames(df)[9] <- "population_rank"
     
     df
 }
+
+# /// --- generatePlot --- ///
+#
+# Notes:
+#   parameters:
+#       - df: dataframe
+#       - y_col: the name of the column in df that will be used for the plot's y-axis
+#       - order_col: the name of the column in df that will be used for the order of the x-axis
+#   examples:
+#       - y_col = "influence_delta(%), order_col = "influence_delta(%)
+#       - y_col = "seats_limit", order_col = "seats_limit"
+#       - y_col = "seats_unlim", order_col = "seats_unlim"
+#
+generatePlot <- function(df, y_col, order_col) {
+    library(ggplot2)
+    
+    # get column name from dataframe
+    y_col_name <- names(df[y_col])
+    order_col_name <- names(df[order_col])
+    
+    g <- ggplot(data = df)
+    g <- g + geom_col(mapping = aes(x = reorder(LSAD_NAME, !!ensym(order_col_name)), y = !!ensym(y_col_name))) # !!ensym() needed to format the string properly within the arguments list (string w/o quotes)
+    g <- g + coord_flip()
+    g
+}
+
 # /// --- seatsDataframe --- ///
 # 
 # Notes:
