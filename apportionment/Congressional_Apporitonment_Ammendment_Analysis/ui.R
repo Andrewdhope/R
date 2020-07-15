@@ -9,7 +9,6 @@
 
 library(shiny)
 
-# Define UI for application that draws a histogram
 shinyUI(fluidPage(
   
   # TITLE
@@ -24,22 +23,19 @@ shinyUI(fluidPage(
     
     # Show a plot of the generated distribution
     mainPanel(
-        plotOutput("distPlot")
+        plotOutput("seatsPlot"),
+        plotOutput("deltaPlot"),
+        dataTableOutput('table')
     ),
     sidebarPanel(
-       sliderInput("bins",
-                   "Number of bins:",
-                   min = 1,
-                   max = 50,
-                   value = 30)
+        radioButtons("radio", 
+                     "Seat Limit", 
+                     choices = list("Capped (435 total seats)" = 1, "Uncapped (>10,000 total seats)" = 2), 
+                     selected = 1, 
+                     inline = FALSE),
+        helpText("Explain the plots and the capped/uncapped options.")
     )
   ),
-  
-  # OPTIONS
-  # need to style the radio buttons to list horizontally
-  fluidRow(radioButtons("radio", 
-                        "Seat Limit", 
-                        choices = list("Capped (435)" = 1, "Uncapped (>10,000)" = 2), selected = 1, inline = TRUE)),
   
   # DOCUMENTATION
   fluidRow(helpText("Detailed objective, background, and methods...",

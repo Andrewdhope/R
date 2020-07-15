@@ -8,19 +8,23 @@
 #
 
 library(shiny)
-
-# Define server logic required to draw a histogram
 shinyServer(function(input, output) {
-   
-  output$distPlot <- renderPlot({
+    source("../apportionment_functions.R")
+    df <- buildDataframe()
     
-    # generate bins based on input$bins from ui.R
-    x    <- faithful[, 2] 
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
+    output$seatsPlot <- renderPlot ({
+        radio_input <- as.integer(input$radio)
+        
+        y_col <- switch(radio_input, "seats_limit", "seats_unlim")
+        order_col <- switch(radio_input, "seats_limit", "seats_unlim")
+        
+        generatePlot(df, y_col, order_col)
+    })
+        
+    output$deltaPlot <- renderPlot ({
+        generatePlot(df, y_col = "influence_delta(%)", order_col = "influence_delta(%)")
+    })
     
-    # draw the histogram with the specified number of bins
-    hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    
-  })
+    output$table <- renderDataTable(df, options = list(paging = FALSE, searching = FALSE))
   
 })
