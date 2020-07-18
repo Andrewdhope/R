@@ -1,14 +1,7 @@
 # NEXT STEP: 
+#   - check the math
+#   - Summary data below the plot: total seats, min/max/mean constituents
 #   - Styles and effects: gganimate reactive to radio buttons
-#   - Summary data on the plot: total seats, min/max/mean constituents
-#
-# Wireframe:
-#   Title.
-#   Intro.
-#   Horizontal bar plot of seats per state | sortable columns for population, #_static, %_static, #_dynamic, %_dynamic, delta_%.
-#   Summary statistics: total seats, min/max/mean constituents
-#   Radio buttons for the data in the bar plot, static vs. dynamic.
-#   Plenty of documentation and research.
 #
 # gganimate:
 #   - https://towardsdatascience.com/create-animated-bar-charts-using-r-31d09e5841da
@@ -47,12 +40,18 @@ buildDataframe <- function() {
     df_limit <- seatsDataframe(df, TRUE)
     df_unlimit <- seatsDataframe(df, FALSE)
     
+    # merge limit and unlimit tables
     df <- cbind(df_limit, df_unlimit$seats)
     df <- df[,-5]
     
-    df <- cbind(df, 100*round((df[4]/sum(df[4])),4))
-    df <- cbind(df, 100*round((df[5]/sum(df[5])),4))
+    # influence columns - limit, unlim, delta
+    df <- cbind(df, 100*round((df[4]/sum(df[4])),5))
+    df <- cbind(df, 100*round((df[5]/sum(df[5])),5))
     df <- cbind(df, df[7]-df[6])
+    
+    # avg_seat_size_limit, avg_seat_size_unlim
+    df <- cbind(df, round(df[3]/df[4],0))
+    df <- cbind(df, round(df[3]/df[5],0))
     
     # order, rank, re-order
     df <- df[order(df$P001001, decreasing = TRUE),]
@@ -67,7 +66,9 @@ buildDataframe <- function() {
     colnames(df)[6] <- "influnce_limit(%)"
     colnames(df)[7] <- "influence_unlim(%)"
     colnames(df)[8] <- "influence_delta(%)"
-    colnames(df)[9] <- "population_rank"
+    colnames(df)[9] <- "avg_seat_size_limit"
+    colnames(df)[10] <- "avg_seat_size_unlim"
+    colnames(df)[11] <- "population_rank"
     
     df
 }
@@ -94,7 +95,7 @@ generatePlot <- function(df, y_col, order_col) {
     g <- ggplot(data = df)
     # !!ensym() needed to format the string properly within the arguments list (string w/o quotes)
     g <- g + geom_col(mapping = aes(x = reorder(state_name, !!ensym(order_col_name)), y = !!ensym(y_col_name))) 
-    g <- g + xlab("50 States") + ylab("Seats") # axis labels
+    g <- g + xlab("50 States") # axis labels
     g <- g + coord_flip()
     
     # cant easily put numeric labels on the bars, errors point to issues with the ensym workaround
@@ -207,14 +208,14 @@ getCensusData <- function() {
 uncappedApportionment <- function(population, init = 30000, stepval = 100){
     seat_limit <- 0
       while (TRUE) {
-        if ((population/(init))>=stepval) {
+        if ((population/init)>=stepval) {
           seat_limit <- seat_limit+stepval
           population <- population-(init*stepval)
         } else {
-            seat_limit <- seat_limit + ceiling(population/(10000*init))
+            seat_limit <- seat_limit + ceiling(population/init)
             break
           }
-        init <- init+1
+        init <- init+10000
       }
     seat_limit
 }

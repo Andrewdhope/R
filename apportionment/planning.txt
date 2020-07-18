@@ -3,7 +3,7 @@ Goal: a map to display congressional density if the congressional  apportionment
 
 Research:
 - general history
-- Madison's apportionment formula (in R)
+- Madison's apportionment formula (in R) [x]
 - Bill to Cap
 - Pre-1920 apportionment process
 
@@ -18,7 +18,7 @@ Sources:
 
 Data:
 - Open API
-- 2010 Census?
+- 2010 Census? [x]
 - Data.World
 
 Maps:
@@ -37,3 +37,5 @@ Design:
 - Historical apportionment
 	+ Retro-fit proposed variants on historical population values
 - Use accepted allocation formula to allocate to states
+- Compare relative influence
+	+ e.g. WY had 1/53rd of CA, now has 1/65th.

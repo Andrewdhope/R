@@ -18,13 +18,16 @@ shinyServer(function(input, output) {
         y_col <- switch(radio_input, "seats_limit", "seats_unlim")
         order_col <- switch(radio_input, "seats_limit", "seats_unlim")
         
-        generatePlot(df, y_col, order_col)
+        generatePlot(df, y_col, order_col) + ylab("Seats")
     })
         
     output$deltaPlot <- renderPlot ({
-        generatePlot(df, y_col = "influence_delta(%)", order_col = "influence_delta(%)")
+        generatePlot(df, y_col = "influence_delta(%)", order_col = "influence_delta(%)") + ylab("Change in Relative Influence (%)")
     })
     
-    output$table <- renderDataTable(df, options = list(paging = FALSE, searching = FALSE))
+    output$table <- renderDataTable(df, options = list(
+        pageLength = 5,
+        lengthMenu = list(c(5, -1), c("5", "50")),
+        searching = FALSE))
   
 })
