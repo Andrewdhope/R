@@ -1,7 +1,17 @@
 # NEXT STEP: 
 #   - check the math
+#   - actually learn ggplot
 #   - Summary data below the plot: total seats, min/max/mean constituents
 #   - Styles and effects: gganimate reactive to radio buttons
+#
+# LAYOUT:
+#   - Title
+#   - Thesis
+#   - Deluxe Plot: average seat size
+#   - Arguments: 1P1V, Electoral College, 
+#   - Static Plots: stable influence, historic trends
+#   - References
+#   - Data
 #
 # gganimate:
 #   - https://towardsdatascience.com/create-animated-bar-charts-using-r-31d09e5841da
@@ -54,21 +64,35 @@ buildDataframe <- function() {
     df <- cbind(df, round(df[3]/df[5],0))
     
     # order, rank, re-order
-    df <- df[order(df$P001001, decreasing = TRUE),]
-    df <- cbind(df, c(1:50))
-    df <- df[order(df$STATE),]
+    # population_rank
+    df <- cbind(df, rank(-df[3], ties.method = "first"))
+    
+    # inf_rank_limit
+    df <- cbind(df, rank(-df[6], ties.method = "first"))
+    # inf_rank_unlimit
+    df <- cbind(df, rank(-df[7], ties.method = "first"))
+    # inf_rank_delta
+    df <- cbind(df, df[13]-df[12])
     
     colnames(df)[1] <- "state_id"
     colnames(df)[2] <- "state_name"
-    colnames(df)[3] <- "state_population"
-    colnames(df)[4] <- "seats_limit"
+    colnames(df)[3] <- "state_pop"
+    colnames(df)[4] <- "seats_lim"
     colnames(df)[5] <- "seats_unlim"
-    colnames(df)[6] <- "influnce_limit(%)"
-    colnames(df)[7] <- "influence_unlim(%)"
-    colnames(df)[8] <- "influence_delta(%)"
-    colnames(df)[9] <- "avg_seat_size_limit"
+    colnames(df)[6] <- "inf_lim(%)"
+    colnames(df)[7] <- "inf_unlim(%)"
+    colnames(df)[8] <- "inf_delta(%)"
+    colnames(df)[9] <- "avg_seat_size_lim"
     colnames(df)[10] <- "avg_seat_size_unlim"
-    colnames(df)[11] <- "population_rank"
+    colnames(df)[11] <- "pop_rank"
+    
+    # not that useful due to ties
+    colnames(df)[12] <- "inf_rank_lim"
+    colnames(df)[13] <- "inf_rank_unlim"
+    colnames(df)[14] <- "inf_rank_delta"
+    
+    # re-order alphabetically
+    df <- df[order(df$state_name),]
     
     df
 }
@@ -80,10 +104,6 @@ buildDataframe <- function() {
 #       - df: dataframe
 #       - y_col: the name of the column in df that will be used for the plot's y-axis
 #       - order_col: the name of the column in df that will be used for the order of the x-axis
-#   examples:
-#       - y_col = "influence_delta(%), order_col = "influence_delta(%)
-#       - y_col = "seats_limit", order_col = "seats_limit"
-#       - y_col = "seats_unlim", order_col = "seats_unlim"
 #
 generatePlot <- function(df, y_col, order_col) {
     library(ggplot2)
@@ -94,13 +114,9 @@ generatePlot <- function(df, y_col, order_col) {
     
     g <- ggplot(data = df)
     # !!ensym() needed to format the string properly within the arguments list (string w/o quotes)
-    g <- g + geom_col(mapping = aes(x = reorder(state_name, !!ensym(order_col_name)), y = !!ensym(y_col_name))) 
-    g <- g + xlab("50 States") # axis labels
+    g <- g + geom_col(mapping = aes(x = reorder(state_name, !!ensym(order_col_name)), y = !!ensym(y_col_name), fill = "#6C5B7B")) 
+    g <- g + xlab("50 States")
     g <- g + coord_flip()
-    
-    # cant easily put numeric labels on the bars, errors point to issues with the ensym workaround
-    # g <- g + geom_text(aes(label = seats_unlim))
-    # g <- g + geom_text(aes(label = P001001))
     
     g
 }

@@ -4,7 +4,8 @@
 #
 # Find out more about building applications with Shiny here:
 # 
-#    http://shiny.rstudio.com/
+#   https://shiny.rstudio.com/gallery/
+#   https://bookdown.org/weicheng/shinyTutorial/ui.html
 #
 
 library(shiny)
@@ -14,8 +15,11 @@ shinyUI(fluidPage(
   # TITLE
   titlePanel("Conressional Apportionment Amendment Analysis"),
   
+  fluidRow(
   # INTRODUCTION
-  fluidRow(helpText("Intro to apportionment and article the first...")),
+  column(12, helpText("Intro to apportionment and article the first...")),
+  column(12,plotOutput("averagesPlot"))
+  ),
   
   # ANALYSIS
   # Sidebar with a slider input for number of bins 
@@ -38,7 +42,9 @@ shinyUI(fluidPage(
   ),
   
   # DOCUMENTATION
-  fluidRow(helpText("Detailed objective, background, and methods...",
-                    br(),br(),
-                    "Paragraphs spaced with br(), br()"))
+  fluidRow(column(12, 
+                  helpText("Detailed objective, background, and methods...",
+                  br(),br(),
+                  "Paragraphs spaced with br(), br()"
+                  )))
 ))
