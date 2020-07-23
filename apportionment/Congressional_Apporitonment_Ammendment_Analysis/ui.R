@@ -18,7 +18,7 @@ shinyUI(fluidPage(
   fluidRow(
   # INTRODUCTION
   column(12, helpText("Intro to apportionment and article the first...")),
-  column(12,plotOutput("averagesPlot"))
+  column(10,plotOutput("averagesPlot"))
   ),
   
   # ANALYSIS

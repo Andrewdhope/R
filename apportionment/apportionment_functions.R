@@ -1,14 +1,17 @@
 # NEXT STEP: 
+#   - research/draft arguments, write them out manually, keep them general for now
+#   - doing this for: portfolio, practice, edification, publication
 #   - check the math
-#   - actually learn ggplot
-#   - Summary data below the plot: total seats, min/max/mean constituents
+#   - plot variance in average seat size
+#   - Summary data below the plot: total seats, min/max/mean constituents (renderText)
+#   - Use state abbreviations to flip back the x-axis
 #   - Styles and effects: gganimate reactive to radio buttons
 #
 # LAYOUT:
 #   - Title
 #   - Thesis
 #   - Deluxe Plot: average seat size
-#   - Arguments: 1P1V, Electoral College, 
+#   - Arguments: 1P1V, Electoral College, increased access, reduced corruptability
 #   - Static Plots: stable influence, historic trends
 #   - References
 #   - Data
@@ -16,9 +19,6 @@
 # gganimate:
 #   - https://towardsdatascience.com/create-animated-bar-charts-using-r-31d09e5841da
 #   - https://www.blakeshaffer.ca/post/making-animated-charts-with-gganimate/
-#
-# DataTables:
-#   - https://shiny.rstudio.com/articles/datatables.html
 #
 # API Key: 9d57165f0c02abba2b8838cc2deedc830e271035
 # API Documentation: https://www.census.gov/data/developers/geography.html <<< INACCURATE
@@ -67,13 +67,13 @@ buildDataframe <- function() {
     # population_rank
     df <- cbind(df, rank(-df[3], ties.method = "first"))
     
-    # inf_rank_limit
-    df <- cbind(df, rank(-df[6], ties.method = "first"))
-    # inf_rank_unlimit
-    df <- cbind(df, rank(-df[7], ties.method = "first"))
-    # inf_rank_delta
-    df <- cbind(df, df[13]-df[12])
-    
+    # # inf_rank_limit
+    # df <- cbind(df, rank(-df[6], ties.method = "first"))
+    # # inf_rank_unlimit
+    # df <- cbind(df, rank(-df[7], ties.method = "first"))
+    # # inf_rank_delta
+    # df <- cbind(df, df[13]-df[12])
+
     colnames(df)[1] <- "state_id"
     colnames(df)[2] <- "state_name"
     colnames(df)[3] <- "state_pop"
@@ -86,10 +86,10 @@ buildDataframe <- function() {
     colnames(df)[10] <- "avg_seat_size_unlim"
     colnames(df)[11] <- "pop_rank"
     
-    # not that useful due to ties
-    colnames(df)[12] <- "inf_rank_lim"
-    colnames(df)[13] <- "inf_rank_unlim"
-    colnames(df)[14] <- "inf_rank_delta"
+    # # not that useful due to ties
+    # colnames(df)[12] <- "inf_rank_lim"
+    # colnames(df)[13] <- "inf_rank_unlim"
+    # colnames(df)[14] <- "inf_rank_delta"
     
     # re-order alphabetically
     df <- df[order(df$state_name),]
