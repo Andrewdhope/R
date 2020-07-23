@@ -1,18 +1,29 @@
 # NEXT STEP: 
 #   - research/draft arguments, write them out manually, keep them general for now
 #   - doing this for: portfolio, practice, edification, publication
-#   - check the math
+#   - get historical data: population per state, seats per state
+#   - make the Wyoming algorithm, check the maths
 #   - plot variance in average seat size
-#   - Summary data below the plot: total seats, min/max/mean constituents (renderText)
 #   - Use state abbreviations to flip back the x-axis
-#   - Styles and effects: gganimate reactive to radio buttons
 #
 # LAYOUT:
-#   - Title
-#   - Thesis
-#   - Deluxe Plot: average seat size
-#   - Arguments: 1P1V, Electoral College, increased access, reduced corruptability
-#   - Static Plots: stable influence, historic trends
+#   - Title: the artificial shortage of congressional representation
+#   - Intro, brief w/ sources
+#       + Historic process, 1929
+#   - Problem summary (tab) and key statistics (variation between mean seat size per state)
+#       + mean size per seat (y) and state-level range-band (y) over time (x)
+#       + why mean matters (high demand/cost of access, special interest/corruption)
+#       + why variation matters (1P1V)
+#   - Tabbed plots
+#       + Current, Article I, Wyoming
+#       + 4 windows
+#           - write-up and controls
+#           - seats per state, simple
+#           - size of seats w/ mean and variance
+#           - delta influence
+#   - Conclusion
+#       + theoretical: 1P1V, backed by historical precedent (sources)
+#       + practical: enhance accessibility (supply) by distributing power
 #   - References
 #   - Data
 #
