@@ -1,22 +1,25 @@
-# NEXT STEP: 
+# NEXT STEPS:
+#   - consolidate what i have in a presentable draft, with plans to expand
 #   - research/draft arguments, write them out manually, keep them general for now
 #   - doing this for: portfolio, practice, edification, publication
-#   - get historical data: population per state, seats per state
-#   - make the Wyoming algorithm, check the maths
+#   - simplify. problem, proposal w/ justification, conclusion
+#   - start with content, then format to feature it
+#   - use state abbreviations to flip back to the x-axis
+#   - get historical data: population per state, seats per state (how?)
 #   - plot variance in average seat size
-#   - Use state abbreviations to flip back the x-axis
 #
 # LAYOUT:
-#   - Title: the artificial shortage of congressional representation
+#   - Title: an artificial shortage of congressional representation
 #   - Intro, brief w/ sources
 #       + Historic process, 1929
-#   - Problem summary (tab) and key statistics (variation between mean seat size per state)
+#   - Problem summary and key statistics (variation between mean seat size per state)
 #       + mean size per seat (y) and state-level range-band (y) over time (x)
 #       + why mean matters (high demand/cost of access, special interest/corruption)
 #       + why variation matters (1P1V)
-#   - Tabbed plots
-#       + Current, Article I, Wyoming
-#       + 4 windows
+#   - Proposal
+#       + historical justification for the Article I algorithm
+#           - tighter state level variation, unchanged rankings, low delta overall, diversified factions
+#       + 4 plots
 #           - write-up and controls
 #           - seats per state, simple
 #           - size of seats w/ mean and variance
@@ -24,6 +27,7 @@
 #   - Conclusion
 #       + theoretical: 1P1V, backed by historical precedent (sources)
 #       + practical: enhance accessibility (supply) by distributing power
+#       + 27th amendment, Article II
 #   - References
 #   - Data
 #

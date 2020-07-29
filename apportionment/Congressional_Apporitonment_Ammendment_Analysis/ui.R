@@ -13,12 +13,20 @@ library(shiny)
 shinyUI(fluidPage(
   
   # TITLE
-  titlePanel("Conressional Apportionment Amendment Analysis"),
+  titlePanel("Artificial Scarcity in Congressional Representation"),
   
   fluidRow(
   # INTRODUCTION
   column(12, helpText("Intro to apportionment and article the first...")), 
-  column(10,plotOutput("averagesPlot"))
+  column(12,plotOutput("averagesPlot"))
+  ),
+  
+  tabsetPanel(type = "tabs", 
+              tabPanel("Problem Summary", helpText('mean size per seat (y) and state-level range-band (y) over time (x)')),
+              tabPanel("Next Tab", 
+                       fluidRow(column(6, helpText('seats per state')), column(6, helpText('intro and controls'))),
+                       fluidRow(column(6, helpText('seat size w/ mean and variance')), column(6, helpText('delta influence')))
+                       )
   ),
   
   # ANALYSIS

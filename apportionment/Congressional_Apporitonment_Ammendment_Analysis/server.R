@@ -30,7 +30,7 @@ shinyServer(function(input, output) {
         
         g
     })
-        
+      
     output$deltaPlot <- renderPlot ({
         
         y_col <- "inf_delta(%)"
