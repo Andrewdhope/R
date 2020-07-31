@@ -2,43 +2,24 @@
 #   - consolidate what i have in a presentable draft, with plans to expand
 #   - research/draft arguments, write them out manually, keep them general for now
 #   - doing this for: portfolio, practice, edification, publication
-#   - simplify. problem, proposal w/ justification, conclusion
 #   - start with content, then format to feature it
-#   - use state abbreviations to flip back to the x-axis
-#   - get historical data: population per state, seats per state (how?)
 #   - plot variance in average seat size
+#   - use state abbreviations to flip back to the x-axis
+#   - get historical data: population per state, seats per state (?)
 #
 # LAYOUT:
 #   - Title: an artificial shortage of congressional representation
 #   - Intro, brief w/ sources
-#       + Historic process, 1929
-#   - Problem summary and key statistics (variation between mean seat size per state)
-#       + mean size per seat (y) and state-level range-band (y) over time (x)
-#       + why mean matters (high demand/cost of access, special interest/corruption)
-#       + why variation matters (1P1V)
+#   - Problem summary and key statistics
 #   - Proposal
-#       + historical justification for the Article I algorithm
-#           - tighter state level variation, unchanged rankings, low delta overall, diversified factions
-#       + 4 plots
-#           - write-up and controls
-#           - seats per state, simple
-#           - size of seats w/ mean and variance
-#           - delta influence
+#       + justification extrapolated Article I algorithm
+#       + 3 plots
 #   - Conclusion
-#       + theoretical: 1P1V, backed by historical precedent (sources)
-#       + practical: enhance accessibility (supply) by distributing power
-#       + 27th amendment, Article II
 #   - References
 #   - Data
 #
-# gganimate:
-#   - https://towardsdatascience.com/create-animated-bar-charts-using-r-31d09e5841da
-#   - https://www.blakeshaffer.ca/post/making-animated-charts-with-gganimate/
-#
 # API Key: 9d57165f0c02abba2b8838cc2deedc830e271035
 # API Documentation: https://www.census.gov/data/developers/geography.html <<< INACCURATE
-# API Example: 
-# http://api.census.gov/data/2010/dec/sf1?key=9d57165f0c02abba2b8838cc2deedc830e271035&get=P001001&for=state:06
 #
 # ---------- ---------- ----------
 #             Title
@@ -81,13 +62,6 @@ buildDataframe <- function() {
     # order, rank, re-order
     # population_rank
     df <- cbind(df, rank(-df[3], ties.method = "first"))
-    
-    # # inf_rank_limit
-    # df <- cbind(df, rank(-df[6], ties.method = "first"))
-    # # inf_rank_unlimit
-    # df <- cbind(df, rank(-df[7], ties.method = "first"))
-    # # inf_rank_delta
-    # df <- cbind(df, df[13]-df[12])
 
     colnames(df)[1] <- "state_id"
     colnames(df)[2] <- "state_name"
@@ -100,12 +74,7 @@ buildDataframe <- function() {
     colnames(df)[9] <- "avg_seat_size_lim"
     colnames(df)[10] <- "avg_seat_size_unlim"
     colnames(df)[11] <- "pop_rank"
-    
-    # # not that useful due to ties
-    # colnames(df)[12] <- "inf_rank_lim"
-    # colnames(df)[13] <- "inf_rank_unlim"
-    # colnames(df)[14] <- "inf_rank_delta"
-    
+
     # re-order alphabetically
     df <- df[order(df$state_name),]
     

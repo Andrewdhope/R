@@ -25,7 +25,7 @@ shinyServer(function(input, output) {
         
         g <- ggplot(data = df)
         g <- g + geom_col(mapping = aes(x = reorder(state_name, !!ensym(order_col_name)), y = !!ensym(y_col_name)))  
-        g <- g + xlab("50 States")
+        g <- g + xlab("50 States") + ylab("House Seats")
         g <- g + coord_flip()
         
         g
@@ -42,7 +42,7 @@ shinyServer(function(input, output) {
         
         g <- ggplot(data = df)
         g <- g + geom_col(mapping = aes(x = reorder(state_name, !!ensym(order_col_name)), y = !!ensym(y_col_name)))  
-        g <- g + xlab("50 States")
+        g <- g + xlab("50 States") + ylab("Change in Relative Influence (%)")
         g <- g + coord_flip()
         
         g
@@ -56,10 +56,14 @@ shinyServer(function(input, output) {
         g <- g + geom_col(mapping = aes(x = reorder(state_name, avg_seat_size_lim), y = avg_seat_size_unlim, fill = "#C060C84")) # #3C3B6E
         
         # axis, labels, and legend
-        g <- g + scale_y_continuous(breaks=seq(0, 1000000,125000))
+        g <- g + scale_y_continuous(breaks=sort(seq(0, 1000000,125000)))
+        # g <- g + ggtitle("Average District Size per State")
         g <- g + labs(fill = "") + xlab("50 States") + ylab("Average Constituents per Seat") 
         g <- g + scale_fill_discrete(name = "Apportionment Method", labels = c("Capped at 435 Seats", "Uncapped"))
-        g <- g + theme(legend.position=c(0.9, 0.15)) # axis.text.y = element_text(size=16)
+        g <- g + theme(legend.position=c(0.9, 0.15))
+        
+        g <- g + geom_hline(yintercept = mean(df$avg_seat_size_lim), linetype = "dashed")
+        g <- g + geom_hline(yintercept = mean(df$avg_seat_size_unlim), linetype = "dotted", size = 1)
         
         g <- g + coord_flip()
         
