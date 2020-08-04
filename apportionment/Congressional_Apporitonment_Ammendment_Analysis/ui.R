@@ -17,7 +17,8 @@ shinyUI(fluidPage(
   titlePanel("Artificial Scarcity in Congressional Representation"),
   fluidRow(
   # INTRODUCTION
-  column(12, helpText("Intro to apportionment and article the first..."),br(),
+  column(12, 
+         includeMarkdown("./markdown/subtitle.md"),
          includeMarkdown("./markdown/introduction.md")
          ), 
   column(12,plotOutput("averagesPlot")),

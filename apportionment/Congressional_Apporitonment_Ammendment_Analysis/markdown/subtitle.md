@@ -1,0 +1,1 @@
+*For many years, the United States House of Representatives periodically expanded its membership to account for a growing national population. Once the House capped its size at 435 seats, the power and influence of individual representatives began to increase, and that influence is now unevenly distributed among the nation's congressional districts.*
