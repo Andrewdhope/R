@@ -5,7 +5,7 @@
 #   - start with content, then format to feature it
 #   - plot variance in average seat size
 #   - use state abbreviations to flip back to the x-axis
-#   - get historical data: population per state, seats per state (?)
+#   - get historical data: population per state, seats per state
 #
 # LAYOUT:
 #   - Title: an artificial shortage of congressional representation
@@ -79,6 +79,48 @@ buildDataframe <- function() {
     df <- df[order(df$state_name),]
     
     df
+}
+
+# /// --- historicalPlots --- ///
+#
+# Notes:
+#   parameters:
+#
+historicalPlots <- function() {
+    library(dplyr)
+    library(tidyr)
+    
+    # next steps: perform grouping/slicing operations; new columns with decade mean and variance from decade mean.
+    
+    # read dataframes
+    df_app <- read.csv("./data/Historical_Apportionment.csv")
+    df_ens <- read.csv("./data/Historical_Population-Enslaved.csv")
+    df_tot <- read.csv("./data/Historical_Population-Total.csv")
+    
+    # melt into tibbles
+    tb_app <- pivot_longer(df_app, -c(1:2), names_to = "years_string", values_to = "seats")
+    tb_ens <- pivot_longer(df_ens, -name, names_to = "decade", values_to = "count.ens")
+    tb_tot <- pivot_longer(df_tot, -c(1:2), names_to = "decade", values_to = "count.tot")
+    
+    # account for enslaved population
+    tb_join <- left_join(tb_tot, tb_ens, by = c("name" = "name", "decade" = "decade"))
+    tb_join <- bind_cols(tb_join, count.comp = tb_join$count.tot - round(0.4*tb_join$count.ens)) # subtract 40% enslaved from total population
+    tb_join[is.na(tb_join$count.comp),6] = tb_join[is.na(tb_join$count.comp),4] # if sum is NA, replace with total column
+    
+    # split apportionment column into apportionment year and associated decade    
+    tb_app <- mutate(tb_app, s = str_split_fixed(tb_app$years_string, "[[:punct:]]", n = 2)) %>% rowwise() # rowwise needed for tibbles
+    tb_app <- mutate(tb_app, decade = unlist(s)[1], apportionment = unlist(s)[2])
+    tb_app <- select(tb_app, -c("s","years_string"))
+    tb_app <- tb_app[,c(1,2,4,5,3)]
+    
+    # join apportionment data into population data
+    tb_join <- right_join(tb_join, tb_app, by = c("name" = "name", "decade" = "decade"))
+    
+    # additional calculated columns
+    tb_join <- mutate(tb_join, seatsize = round(tb_try$count.comp/tb_join$seats))
+    
+    tb_join
+    
 }
 
 # /// --- generatePlot --- ///
