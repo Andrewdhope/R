@@ -21,6 +21,7 @@ shinyUI(fluidPage(
          includeMarkdown("./markdown/subtitle.md"),
          includeMarkdown("./markdown/introduction.md")
          ), 
+  column(12,plotOutput("historicalPlot")),
   column(12,plotOutput("averagesPlot")),
   column(12,includeMarkdown("./markdown/problem_summary.md"))
   ),

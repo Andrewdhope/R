@@ -6,6 +6,7 @@
 #   - plot variance in average seat size
 #   - use state abbreviations to flip back to the x-axis
 #   - get historical data: population per state, seats per state
+#       + check the derived values: 1863, 1920
 #
 # LAYOUT:
 #   - Title: an artificial shortage of congressional representation
@@ -81,26 +82,27 @@ buildDataframe <- function() {
     df
 }
 
-# /// --- historicalPlots --- ///
+# /// --- historicalDataPrep --- ///
 #
 # Notes:
 #   parameters:
 #
-historicalPlots <- function() {
+historicalDataPrep <- function() {
     library(dplyr)
     library(tidyr)
+    library(stringr)
     
-    # next steps: perform grouping/slicing operations; new columns with decade mean and variance from decade mean.
+    # next steps: check the math, especially 1863, 1911-1943 (AZ, NM admissions in 1912?).
     
     # read dataframes
-    df_app <- read.csv("./data/Historical_Apportionment.csv")
-    df_ens <- read.csv("./data/Historical_Population-Enslaved.csv")
-    df_tot <- read.csv("./data/Historical_Population-Total.csv")
+    tb_app <- read.csv("../data/Historical_Apportionment.csv")
+    tb_ens <- read.csv("../data/Historical_Population-Enslaved.csv")
+    tb_tot <- read.csv("../data/Historical_Population-Total.csv")
     
     # melt into tibbles
-    tb_app <- pivot_longer(df_app, -c(1:2), names_to = "years_string", values_to = "seats")
-    tb_ens <- pivot_longer(df_ens, -name, names_to = "decade", values_to = "count.ens")
-    tb_tot <- pivot_longer(df_tot, -c(1:2), names_to = "decade", values_to = "count.tot")
+    tb_app <- pivot_longer(tb_app, -c(1:2), names_to = "years_string", values_to = "seats")
+    tb_ens <- pivot_longer(tb_ens, -name, names_to = "decade", values_to = "count.ens")
+    tb_tot <- pivot_longer(tb_tot, -c(1:2), names_to = "decade", values_to = "count.tot")
     
     # account for enslaved population
     tb_join <- left_join(tb_tot, tb_ens, by = c("name" = "name", "decade" = "decade"))
@@ -117,12 +119,40 @@ historicalPlots <- function() {
     tb_join <- right_join(tb_join, tb_app, by = c("name" = "name", "decade" = "decade"))
     
     # additional calculated columns
-    tb_join <- mutate(tb_join, seatsize = round(tb_try$count.comp/tb_join$seats))
+    tb_join <- mutate(tb_join, seatsize = round(tb_join$count.comp/tb_join$seats))
+    tb_join <- tb_join[!tb_join$decade == "X1789",] # remove 1789 rows, no prior census
+    tb_join$decade = as.integer(str_sub(tb_join$decade, start = 2L, end = -1L)) # trim leading X and make numeric
+    tb_join$apportionment = as.integer(tb_join$apportionment)
+    
+    # calculate mean seatsize for each decade
+    tb_join <- group_by(tb_join, apportionment) 
+    tb_join <- mutate(tb_join, mean.seatsize = round(mean(seatsize, na.rm = TRUE)))
+    tb_join <- ungroup(tb_join)
+    
+    tb_join <- mutate(tb_join, diff.seatsize = seatsize-mean.seatsize)
     
     tb_join
     
 }
 
+# /// --- historicalPlot --- ///
+#
+# Notes:
+#   parameters:
+#
+historicalPlot <- function() {
+    library(dplyr)
+    library(ggplot2)
+    
+    tb_summ <- historicalDataPrep()
+    tb_summ <- summarise(group_by(tb_join, apportionment), mean.seatsize = mean(mean.seatsize), max.diff = max(diff.seatsize, na.rm = TRUE), min.diff = min(diff.seatsize, na.rm = TRUE))
+    
+    g <- ggplot(data = tb_summ)
+    g <- g + geom_line(mapping = aes(x = apportionment, y = mean.seatsize))
+    g <- g + geom_ribbon(aes(x = apportionment, y = mean.seatsize, ymin = mean.seatsize+min.diff, ymax = mean.seatsize+max.diff, alpha = 0.1))
+
+    g
+}
 # /// --- generatePlot --- ///
 #
 # Notes:

@@ -69,7 +69,16 @@ shinyServer(function(input, output) {
         
         g
     })
-    
+
+    output$historicalPlot <- renderPlot ({
+        g <- historicalPlot()
+        g <- g + scale_x_continuous(breaks = sort(seq(1793, 2013, 10)))
+        g <- g + theme(legend.position = "none")
+        g <- g + xlab("Apportionment Year") + ylab("Constituents per District (National Average)")
+        
+        g
+    })
+
     output$table <- renderDataTable(df, options = list(
         pageLength = 5,
         lengthMenu = list(c(5, -1), c("5", "50")),
