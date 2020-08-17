@@ -17,13 +17,12 @@ shinyUI(fluidPage(
   titlePanel("Artificial Scarcity in Congressional Representation"),
   fluidRow(
   # INTRODUCTION
-  column(12, 
-         includeMarkdown("./markdown/subtitle.md"),
-         includeMarkdown("./markdown/introduction.md")
-         ), 
+  column(12,includeMarkdown("./markdown/subtitle.md")),
   column(12,plotOutput("historicalPlot")),
-  column(12,plotOutput("averagesPlot")),
-  column(12,includeMarkdown("./markdown/problem_summary.md"))
+  column(12,includeMarkdown("./markdown/problem.md")),
+  column(12,includeMarkdown("./markdown/introduction.md")), 
+  column(12,includeMarkdown("./markdown/proposal.md")),
+  column(12,plotOutput("averagesPlot"))
   ),
 
   # ANALYSIS

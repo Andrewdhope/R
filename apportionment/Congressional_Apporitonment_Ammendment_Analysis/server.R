@@ -73,8 +73,10 @@ shinyServer(function(input, output) {
     output$historicalPlot <- renderPlot ({
         g <- historicalPlot()
         g <- g + scale_x_continuous(breaks = sort(seq(1793, 2013, 10)))
+        g <- g + theme(panel.grid.minor.x = element_blank())
         g <- g + theme(legend.position = "none")
-        g <- g + xlab("Apportionment Year") + ylab("Constituents per District (National Average)")
+        g <- g + ggtitle("The Average Number of Constiturents per Seat in the United States House of Representatives")
+        g <- g + xlab("Apportionment Year") + ylab("Average Constituents per Seat")
         
         g
     })

@@ -1,4 +1,5 @@
-### Article the First
+### Historical Context  
+#### Article the First
 In 1789, at the time of the submission of the Bill of Rights, twelve proposed amendments were submitted to the States. Of these, Articles III–XII
 were ratified and became the first ten amendments to the Constitution. Proposed Articles I and II were not ratified with these ten. In 1992, Article
 II was proclaimed as ratified as the 27th amendment. The following is the text of proposed Article I:
@@ -6,8 +7,8 @@ II was proclaimed as ratified as the 27th amendment. The following is the text o
 
 Note: "Proportion so regulated by Congress" settled into the method of equal proportions.  
 
-### The Federalist Papers  
+#### The Federalist Papers  
 
-### 140 Years of Reapportionment  
+#### 140 Years of Reapportionment  
 
-### The Reapportionment Act of 1929  
+#### The Reapportionment Act of 1929  

@@ -3,10 +3,9 @@
 #   - research/draft arguments, write them out manually, keep them general for now
 #   - doing this for: portfolio, practice, edification, publication
 #   - start with content, then format to feature it
-#   - plot variance in average seat size
-#   - use state abbreviations to flip back to the x-axis
+#   - try state abbreviations to flip back to the x-axis
 #   - get historical data: population per state, seats per state
-#       + check the derived values: 1863, 1920
+#       + check the derived values: 1863, 1920, 1911-1943 (AZ, NM admissions in 1912?)s
 #
 # LAYOUT:
 #   - Title: an artificial shortage of congressional representation
@@ -92,8 +91,6 @@ historicalDataPrep <- function() {
     library(tidyr)
     library(stringr)
     
-    # next steps: check the math, especially 1863, 1911-1943 (AZ, NM admissions in 1912?).
-    
     # read dataframes
     tb_app <- read.csv("../data/Historical_Apportionment.csv")
     tb_ens <- read.csv("../data/Historical_Population-Enslaved.csv")
@@ -145,7 +142,7 @@ historicalPlot <- function() {
     library(ggplot2)
     
     tb_summ <- historicalDataPrep()
-    tb_summ <- summarise(group_by(tb_join, apportionment), mean.seatsize = mean(mean.seatsize), max.diff = max(diff.seatsize, na.rm = TRUE), min.diff = min(diff.seatsize, na.rm = TRUE))
+    tb_summ <- summarise(group_by(tb_summ, apportionment), mean.seatsize = mean(mean.seatsize), max.diff = max(diff.seatsize, na.rm = TRUE), min.diff = min(diff.seatsize, na.rm = TRUE))
     
     g <- ggplot(data = tb_summ)
     g <- g + geom_line(mapping = aes(x = apportionment, y = mean.seatsize))
