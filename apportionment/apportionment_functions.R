@@ -3,9 +3,12 @@
 #   - research/draft arguments, write them out manually, keep them general for now
 #   - doing this for: portfolio, practice, edification, publication
 #   - start with content, then format to feature it
-#   - try state abbreviations to flip back to the x-axis
+#   - gather sources, document sections
+#
 #   - get historical data: population per state, seats per state
 #       + check the derived values: 1863, 1920, 1911-1943 (AZ, NM admissions in 1912?)s
+#           - 1863 works, seats apportioned according to compromise, though southern states not seated
+#           - 1903-1933 used Webster's method, which explains the sudden drop (prove)
 #
 # LAYOUT:
 #   - Title: an artificial shortage of congressional representation
