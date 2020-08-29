@@ -3,8 +3,9 @@
 #   - research/draft arguments, write them out manually, keep them general for now
 #   - doing this for: portfolio, practice, edification, publication
 #   - start with content, then format to feature it
-#   - gather sources, document sections
 #
+#   - gather sources, document sections
+#       + problem summary
 #   - get historical data: population per state, seats per state
 #       + check the derived values: 1863, 1920, 1911-1943 (AZ, NM admissions in 1912?)s
 #           - 1863 works, seats apportioned according to compromise, though southern states not seated
@@ -236,6 +237,13 @@ recalculatePriorityValues <- function(df) {
     multiplier <- (1/(sqrt((df$seats+1)*df$seats))) # geometric mean, as described by the Method of Equal Proportions
     priority_values <- df$P001001 * multiplier
     priority_values
+}
+
+# needs some work here...
+recalculateWebster <- function(df) {
+    df <- cbind(df, seats = 1)
+    df$seats = round((df$count.comp/(sum(df$count.comp)/387))) # 387 + 48 = 435
+    df
 }
 
 # /// --- getCensusData --- ///

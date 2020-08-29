@@ -80,6 +80,8 @@ shinyServer(function(input, output) {
         
         g
     })
+    
+    output$summaryTable <- renderTable(data.frame("1813" = 37535, "1863" = 117354, "1913" = 205428, "1963" = 400040, "2013" = 710190))
 
     output$table <- renderDataTable(df, options = list(
         pageLength = 5,

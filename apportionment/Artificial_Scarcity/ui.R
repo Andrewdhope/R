@@ -19,6 +19,7 @@ shinyUI(fluidPage(
   # INTRODUCTION
   column(12,includeMarkdown("./markdown/subtitle.md")),
   column(12,plotOutput("historicalPlot")),
+  # column(12,tableOutput("summaryTable")),
   column(12,includeMarkdown("./markdown/problem.md")),
   column(12,includeMarkdown("./markdown/introduction.md")), 
   column(12,includeMarkdown("./markdown/proposal.md")),
