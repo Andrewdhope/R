@@ -8,4 +8,4 @@ Along with a growing national average, there is an increasing level of variance 
 
 The variance between the most-represented and least-represented states lessens the level of congressional influence for the citizens of some small states.  
 
-Both this national average, and the variance between state-level averages are **guaranteed** to expand under the current system of apportionment. Over time, House members will become more expensive to access, and the gap between the most-represented and least-represented states will widen.  
+Both the national average, and the variance between state-level averages are **guaranteed** to expand under the current system of apportionment. Over time, House members will become more expensive to access, and the gap between the most-represented and least-represented states will widen.  

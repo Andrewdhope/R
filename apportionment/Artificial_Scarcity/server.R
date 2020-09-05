@@ -12,7 +12,7 @@ library(ggplot2)
 shinyServer(function(input, output) {
     source("../apportionment_functions.R")
     df <- buildDataframe()
-    
+    tb <- historicalDataPrep()
     output$seatsPlot <- renderPlot ({
         radio_input <- as.integer(input$radio)
         
@@ -80,12 +80,15 @@ shinyServer(function(input, output) {
         
         g
     })
-    
-    output$summaryTable <- renderTable(data.frame("1813" = 37535, "1863" = 117354, "1913" = 205428, "1963" = 400040, "2013" = 710190))
 
-    output$table <- renderDataTable(df, options = list(
+    output$currentData <- renderDataTable(df, options = list(
         pageLength = 5,
-        lengthMenu = list(c(5, -1), c("5", "50")),
+        lengthMenu = list(c(5, 50), c("5", "50")),
+        searching = FALSE))
+    
+    output$historicalData <- renderDataTable(tb, options = list(
+        pageLength = 5,
+        lengthMenu = list(c(5, 50, 100), c("5", "50", "100")),
         searching = FALSE))
   
 })

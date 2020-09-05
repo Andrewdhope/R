@@ -1,34 +1,22 @@
 # NEXT STEPS:
 #   - consolidate what i have in a presentable draft, with plans to expand
-#   - research/draft arguments, write them out manually, keep them general for now
-#   - doing this for: portfolio, practice, edification, publication
-#   - start with content, then format to feature it
+#   - research/draft arguments, keep them general for now
+#   - doing this for: portfolio, practice, education
 #
+#   - prove webster's method for 1903-1933 [o]
 #   - gather sources, document sections
-#       + problem summary
-#   - get historical data: population per state, seats per state
-#       + check the derived values: 1863, 1920, 1911-1943 (AZ, NM admissions in 1912?)s
-#           - 1863 works, seats apportioned according to compromise, though southern states not seated
-#           - 1903-1933 used Webster's method, which explains the sudden drop (prove)
+#       + proposal [o]
+#       + conclusion [o]
+#       + historical context [==>]
+#           - Federalist Papers
+#           - 140 Years of Apportionment
+#           - The Reapportionment Act of 1929
+#       + supplement [==>]
+#   - specific design choices: width, color, shading [o]
 #
-# LAYOUT:
-#   - Title: an artificial shortage of congressional representation
-#   - Intro, brief w/ sources
-#   - Problem summary and key statistics
-#   - Proposal
-#       + justification extrapolated Article I algorithm
-#       + 3 plots
-#   - Conclusion
-#   - References
-#   - Data
-#
-# API Key: 9d57165f0c02abba2b8838cc2deedc830e271035
-# API Documentation: https://www.census.gov/data/developers/geography.html <<< INACCURATE
-#
-# ---------- ---------- ----------
-#             Title
-# ---------- ---------- ----------
-#
+# ---------------------------------------------
+#            apportionment_functions 
+# ---------------------------------------------
 #
 # description
 #
