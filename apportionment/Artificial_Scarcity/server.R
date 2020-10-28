@@ -13,18 +13,23 @@ shinyServer(function(input, output) {
     source("../apportionment_functions.R")
     df <- buildDataframe()
     tb <- historicalDataPrep()
+    
     output$seatsPlot <- renderPlot ({
         radio_input <- as.integer(input$radio)
+        input_inverse <- 3-radio_input
         
         y_col <- switch(radio_input, "seats_lim", "seats_unlim")
         order_col <- switch(radio_input, "seats_lim", "seats_unlim")
+        second_order_col <- switch(input_inverse, "seats_lim", "seats_unlim")
         
         # get column name from dataframe
         y_col_name <- names(df[y_col])
         order_col_name <- names(df[order_col])
+        second_order_col_name <- names(df[second_order_col])
         
         g <- ggplot(data = df)
-        g <- g + geom_col(mapping = aes(x = reorder(state_name, !!ensym(order_col_name)), y = !!ensym(y_col_name)))  
+        # clever reordering method to effectively use the second_order as a tie breaker for the first, rather than defaulting to alphabetical
+        g <- g + geom_col(mapping = aes(x = reorder(state_name, !!ensym(order_col_name) + (!!ensym(second_order_col_name)/10000)), y = !!ensym(y_col_name)))
         g <- g + xlab("50 States") + ylab("House Seats")
         g <- g + coord_flip()
         

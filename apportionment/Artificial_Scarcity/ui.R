@@ -27,13 +27,17 @@ shinyUI(fluidPage(
         
         # PROPOSAL - visual design w/ width, color, shading
         column(12,includeMarkdown("./markdown/proposal.md")),
+        column(12,includeMarkdown("./markdown/results.md")),
+        column(12,includeMarkdown("./markdown/results-variance.md")),
         column(12,plotOutput("averagesPlot"))
         ),
   
+    fluidRow(
+        column(12,includeMarkdown("./markdown/results-rankings-title.md"))
+    ),
     sidebarLayout(
         mainPanel(
-            plotOutput("seatsPlot"),
-            plotOutput("deltaPlot")
+            plotOutput("seatsPlot")
             ),
         sidebarPanel(
             radioButtons("radio", 
@@ -42,15 +46,29 @@ shinyUI(fluidPage(
                 selected = 1, 
                 inline = FALSE
                 ),
-            helpText("Explain the plots and the capped/uncapped options.")
+            includeMarkdown("./markdown/results-rankings-text.md")
             )
         ),
+    fluidRow(
+      column(12,includeMarkdown("./markdown/results-influence.md"))
+    ),
+    sidebarLayout(
+      mainPanel(
+          plotOutput("deltaPlot")
+      ),
+      sidebarPanel(
+          helpText("A few words to spell out the concept of delta influence.")
+      )
+    ),  
   
     fluidRow(
         # CONCLUSION - write the supplemental
         column(12,includeMarkdown("./markdown/conclusion.md")),
+        column(12,includeMarkdown("./markdown/supplement.md")),
+        column(12,includeMarkdown("./markdown/references.md")),
         
         # DATA
+        column(12,includeMarkdown("./markdown/data.md")),
         column(12,includeMarkdown("./markdown/title-currentData.md"),dataTableOutput('currentData')),
         column(12,includeMarkdown("./markdown/title-historicalData.md"),dataTableOutput('historicalData'))
     )

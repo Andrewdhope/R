@@ -3,24 +3,6 @@
 #   - research/draft arguments, keep them general for now
 #   - doing this for: portfolio, practice, education
 #
-#   - prove webster's method for 1903-1933 [o]
-#       + Not webster's method, its indians not taxed: 
-#           - https://www.census.gov/history/www/reference/apportionment/apportionment_legislation_1890_-_present.html
-#           - https://en.wikipedia.org/wiki/Indian_Citizenship_Act
-#           - could account for indians not taxed for just 4 censuses (1890-1910, 1930), add these to my tables and re-run
-#               + done, but still looks off, need to re-examine the 1930 apportionment
-#               + PQA complete, the numbers are right, blame it on the Nationality Act of 1940
-#
-#   - gather sources, document sections
-#       + proposal [o]
-#       + conclusion [o]
-#       + historical context [==>]
-#           - Federalist Papers
-#           - 140 Years of Apportionment
-#           - The Reapportionment Act of 1929
-#       + supplement [==>]
-#   - specific design choices: width, color, shading [o]
-#
 # ---------------------------------------------
 #            apportionment_functions 
 # ---------------------------------------------
@@ -98,17 +80,17 @@ historicalDataPrep <- function() {
     
     # melt into tibbles
     tb_app <- pivot_longer(tb_app, -c(1:2), names_to = "years_string", values_to = "seats")
-    tb_ens <- pivot_longer(tb_ens, -name, names_to = "decade", values_to = "count.ens")
-    tb_ind <- pivot_longer(tb_ind, -name, names_to = "decade", values_to = "count.ind")
-    tb_tot <- pivot_longer(tb_tot, -c(1:2), names_to = "decade", values_to = "count.tot")
+    tb_ens <- pivot_longer(tb_ens, -name, names_to = "decade", values_to = "enslaved")
+    tb_ind <- pivot_longer(tb_ind, -name, names_to = "decade", values_to = "indian")
+    tb_tot <- pivot_longer(tb_tot, -c(1:2), names_to = "decade", values_to = "total")
     
     # account for enslaved population and indians not taxed
     tb_join <- left_join(tb_tot, tb_ens, by = c("name" = "name", "decade" = "decade"))
     tb_join <- left_join(tb_join, tb_ind, by = c("name" = "name", "decade" = "decade"))
     
-    tb_join <- bind_cols(tb_join, count.comp = tb_join$count.tot)
-    tb_join[!is.na(tb_join$count.ens),7] = tb_join[!is.na(tb_join$count.ens),4] - round(0.4*tb_join[!is.na(tb_join$count.ens),5]) # subtract 40% enslaved from total population
-    tb_join[!is.na(tb_join$count.ind),7] = tb_join[!is.na(tb_join$count.ind),4] - tb_join[!is.na(tb_join$count.ind),6] # subtract "indians not taxed" (1893-1933) 
+    tb_join <- bind_cols(tb_join, compiled = tb_join$total)
+    tb_join[!is.na(tb_join$enslaved),7] = tb_join[!is.na(tb_join$enslaved),4] - round(0.4*tb_join[!is.na(tb_join$enslaved),5]) # subtract 40% enslaved from total population
+    tb_join[!is.na(tb_join$indian),7] = tb_join[!is.na(tb_join$indian),4] - tb_join[!is.na(tb_join$indian),6] # subtract "indians not taxed" (1893-1933) 
     
     # split apportionment column into apportionment year and associated decade    
     tb_app <- mutate(tb_app, s = str_split_fixed(tb_app$years_string, "[[:punct:]]", n = 2)) %>% rowwise() # rowwise needed for tibbles
@@ -120,7 +102,7 @@ historicalDataPrep <- function() {
     tb_join <- right_join(tb_join, tb_app, by = c("name" = "name", "decade" = "decade"))
     
     # additional calculated columns
-    tb_join <- mutate(tb_join, seatsize = round(tb_join$count.comp/tb_join$seats))
+    tb_join <- mutate(tb_join, seatsize = round(tb_join$compiled/tb_join$seats))
     tb_join <- tb_join[!tb_join$decade == "X1789",] # remove 1789 rows, no prior census
     tb_join$decade = as.integer(str_sub(tb_join$decade, start = 2L, end = -1L)) # trim leading X and make numeric
     tb_join$apportionment = as.integer(tb_join$apportionment)
@@ -242,7 +224,7 @@ recalculatePriorityValues <- function(df) {
 # needs some work here...
 recalculateWebster <- function(df) {
     df <- cbind(df, seats = 1)
-    df$seats = round((df$count.comp/(sum(df$count.comp)/387))) # 387 + 48 = 435
+    df$seats = round((df$compiled/(sum(df$compiled)/387))) # 387 + 48 = 435
     df
 }
 
@@ -285,17 +267,23 @@ getCensusData <- function() {
 #       - stepval: step value, number of apportioned seats needed to increment the init value (default: 100)
 #   returns: priority_value, as described by the Method of Equal Proportions 
 #
-uncappedApportionment <- function(population, init = 30000, stepval = 100){
+uncappedApportionment <- function(population, initial = 30000, stepval = 100){
     seat_limit <- 0
       while (TRUE) {
-        if ((population/init)>=stepval) {
-          seat_limit <- seat_limit+stepval
-          population <- population-(init*stepval)
-        } else {
-            seat_limit <- seat_limit + ceiling(population/init)
-            break
-          }
-        init <- init+10000
+        # if your population requires more than stepval representatives...
+        if ((population/initial)>=stepval) {
+            # add the stepval to the overall seat_limit
+            seat_limit <- seat_limit+stepval
+            # reduce the population by the amount of people 'handled' by this step of the apportionment
+            population <- population-(initial*stepval)
+        }
+        else {
+            # we have crossed the last stepval threshold, just need to add the remainder
+            seat_limit <- seat_limit + ceiling(population/initial)
+            break # exit while loop
+        }
+        # increase initial ratio before next iteration
+        initial <- initial+10000
       }
     seat_limit
 }
