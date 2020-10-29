@@ -1,6 +1,8 @@
 #### Drastic Reduction in Variance  
 Expanding the House would directly reduce the variance in the average number of constituents per seat. When every seat represents hundreds of thousands of people, states that are on the cusp of gaining or losing a  seat see wide differences in their relative levels of representation. When each seat represents a smaller set of constituents, being positioned on the cusp does not result in such a significant difference.   
 
-For example, using the 2010 census... mean, variance, range, Rhode Island. Compared to uncapped version of the stats and Vermont.
+For example, using 2010 census data, the national mean district size sat at 710,190, with a standard deviation of 70,312. The least-represented state, Montana, had an average district size of 989,415 constituents, which is nearly twice that of Rhode Island's 526,284 constituents per House seat.  
+
+Comparing this to an uncapped model, using the same census data, the House would be allowed to expand to 2,245 members. The national mean district size moves to 136,856, and standard deviation shrinks to 3,102. The most-represented state becomes Vermont, with an average district size of 125,148. The least-represented state shifts to West Virginia, with the average district coming in at 142,538 constituents per seat.  
 
 While precise district sizes depend on the congressional maps drawn by each state, the variance in representation can still be estimated by simply observing the average number of constituents per seat, per state. This analysis essentially uses hypothetical state-level districts that are exactly equivalent in size. This method actually minimizes the calculated variance. In reality, where districts are drawn unequally, the variance in represendation would be greater.  

@@ -42,7 +42,7 @@ shinyUI(fluidPage(
         sidebarPanel(
             radioButtons("radio", 
                 "Seat Limit", 
-                choices = list("Capped (435 total seats)" = 1, "Uncapped (>2,000 total seats)" = 2), 
+                choices = list("Capped (435 total seats)" = 1, "Uncapped (2,245 total seats)" = 2), 
                 selected = 1, 
                 inline = FALSE
                 ),

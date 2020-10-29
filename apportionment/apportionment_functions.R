@@ -1,4 +1,4 @@
-# NEXT STEPS:
+## NEXT STEPS:
 #   - consolidate what i have in a presentable draft, with plans to expand
 #   - research/draft arguments, keep them general for now
 #   - doing this for: portfolio, practice, education
