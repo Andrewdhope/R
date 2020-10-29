@@ -1,5 +1,5 @@
-[revise]An expanded House essentially reduces the "representation step-size" for each apportioned seat.  
+While the count of representatives in each state increases significantly, the ***relative influence*** of a state remains consistent when moving from a capped to an uncapped system.  
 
-Intuitively, with such a major change to the structure of the House, one would expect to see a dramatic swing in the balance of power within the chamber. However, it is the apportionment method, and not the seat limit, that controls the relative influence of each state.  
+Switching the seat limit between the capped and uncapped options does not change the ***ordering*** of state seat counts. A state's relative level of influence remains steady under the two methods, the only difference being several ties that are broken when shifting to the uncapped model.  
 
-This is depicted in the accomanying plot. Switching the seat limit between the capped and uncapped options does not change the ordering of state seat counts. State levels of influence remain steady under the two models, the only difference being several ties that are broken when shifting to the uncapped model.  
+Intuitively, such a major change to House membership would seem to necessarily swing the balance of power within the chamber. However, it is the apportionment method[^[3]](#references), and not the seat limit, that controls the relative influence of each state.  

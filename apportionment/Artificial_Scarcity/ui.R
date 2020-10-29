@@ -1,4 +1,4 @@
-##
+#
 # This is the user-interface definition of a Shiny web application. You can
 # run the application by clicking 'Run App' above.
 #
@@ -50,14 +50,14 @@ shinyUI(fluidPage(
             )
         ),
     fluidRow(
-      column(12,includeMarkdown("./markdown/results-influence.md"))
+      column(12,includeMarkdown("./markdown/results-influence-title.md"))
     ),
     sidebarLayout(
       mainPanel(
           plotOutput("deltaPlot")
       ),
       sidebarPanel(
-          helpText("A few words to spell out the concept of delta influence.")
+          includeMarkdown("./markdown/results-influence-text.md")
       )
     ),  
   
