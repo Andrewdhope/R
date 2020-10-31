@@ -1,12 +1,20 @@
 ### Proposal  
 #### Interpretation of Article I  
-##### The Typo  
-From Madison, to the House, to the Senate, to the final version.  
-Only the final version uses *more*.  
-Using more sets up a mathematical condradiction.  
-They were busy, and probably didn't totally get the algorithm.  
-Good quote from Melancton Smith.  
-[^[2]](#references)
+##### The Error  
+The final line of Article I, approved by Congress in September 1789, contains a critical error. Here is the entirety of change as described by the Journal of the House of Representatives (1789):
+
+> That the first article be amended by striking out the word "less," in the last place of the said first article, and inserting in lieu therreof the word "more."  
+
+This single-word change in the final clause of Article I causes major problems. It is inconsistent with the pattern of growth laid out in the rest of the text, which aims to contiunally expand the House in response to changes in population. It is also at odds with the versions of Article I drafted sepeartely by the House and the Senate.  
+
+Historical research published at thirty-thousand.org[^[2]](#references) chronicles the evolution of Article I, from James Madison's notebooks, to the version initially authored by the House in August 1789, to the version revised by the Senate in September 1789, and the version approved by Congress later in September 1789. The only version of Article I that limits the ratio of constituents to representatives is the final version produced by the 1789 House-Senate Conference Committee[^[4]](#references).  
+
+The change from *less* to *more* was ordered during the House and Senate Conference Committee held from September 21 through September 24, 1789. During this committee, the Congress debated, ammended, and resolved a wide range of differences present throughout the entire Bill of Rights. They had a mere four days. This key change was ordered, but likely not fully understood.  
+
+Possibly the most direct indication that the modified wording was indeed made in error, is that it establishes a mathematical contradiction. The final version of Article I requires that the House contain more than 200 members, **and** less than one representative per 50,000 constituents. But with certain population levels (around 8 million), that select ratio results in a number that is less than 200. The membership of the House cannot be both over 200, and under X, where X is less than 200. This contradictory state only effects the House in a relatively small set of all cases, but it does lend support to the case that the shift to *more* was not fully thought through.  
+
+There is a strong case that this late revision was indeed an error, made without a thorough-enough analysis of the effects. The remainder of this analysis interprets the Article I algorithm with *less* in the final clause.  
+
 ##### Extending the Algorithm  
 *Article the first* is an apportionment algorithm. It describes an iterative process to increase the ratio of constituents to representatives. Beginning with 30,000 constituents per representative, the ratio increases to 40,000:1 and 50,000:1 as the membership of the House crosses 100-member thresholds. It is a clever approach that expands the House more gradually than a strictly proportional relationship.  
 
