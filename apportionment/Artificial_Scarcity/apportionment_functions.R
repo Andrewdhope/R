@@ -73,10 +73,10 @@ historicalDataPrep <- function() {
     library(stringr)
     
     # read dataframes
-    tb_app <- read.csv("../data/Historical_Apportionment.csv")
-    tb_ens <- read.csv("../data/Historical_Population-Enslaved.csv")
-    tb_ind <- read.csv("../data/Historical_Population-Indian.csv")
-    tb_tot <- read.csv("../data/Historical_Population-Total.csv")
+    tb_app <- read.csv("./data/Historical_Apportionment.csv")
+    tb_ens <- read.csv("./data/Historical_Population-Enslaved.csv")
+    tb_ind <- read.csv("./data/Historical_Population-Indian.csv")
+    tb_tot <- read.csv("./data/Historical_Population-Total.csv")
     
     # melt into tibbles
     tb_app <- pivot_longer(tb_app, -c(1:2), names_to = "years_string", values_to = "seats")

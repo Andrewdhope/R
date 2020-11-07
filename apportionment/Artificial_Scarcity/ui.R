@@ -1,4 +1,4 @@
-##
+#
 # This is the user-interface definition of a Shiny web application. You can
 # run the application by clicking 'Run App' above.
 #
@@ -14,7 +14,7 @@ library(markdown)
 shinyUI(fluidPage(
   
   # TITLE
-  titlePanel("Artificial Scarcity in Congressional Representation"),
+  titlePanel("Artificial Scarcity in Congressional Representation (draft)"),
     fluidRow(
         # INTRODUCTION
         column(12,includeMarkdown("./markdown/subtitle.md")),

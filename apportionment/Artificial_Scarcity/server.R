@@ -10,7 +10,7 @@
 library(shiny)
 library(ggplot2)
 shinyServer(function(input, output) {
-    source("../apportionment_functions.R")
+    source("./apportionment_functions.R")
     df <- buildDataframe()
     tb <- historicalDataPrep()
     
